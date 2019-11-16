@@ -17,7 +17,7 @@ class SFCMonProducer():
 
 	def create_manager(self):
 		self.manager = RTP4ClientController()
-		self.manager.startClientController(["p4sec-vm"])
+		self.manager.startClientController(["p4sfcmon-vm"])
 
 	def start_get_metrics(self):
 		self.collected_metrics = self.manager.get_metrics_from_server()
