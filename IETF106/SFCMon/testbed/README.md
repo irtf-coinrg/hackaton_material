@@ -64,11 +64,8 @@ to install a few rules.
 
 ## Monitoring SFCs
 
-1. Access the Kibana web UI by hitting: [http://localhost:5601](http://localhost:5601) 
+1. Access the Kibana web UI by hitting: [http://localhost:5601/app](http://localhost:5601) 
 with a web browser and use the following default credentials to log in:
-
-* user: *elastic*
-* password: *\<your generated elastic password>*
  
 2. When Kibana launches for the first time, it is not configured with any index pattern. 
 Please refer to oficial Kibana documentation to learn how to create an index pattern via 
