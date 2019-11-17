@@ -5,7 +5,6 @@ import sys
 import socket
 import random
 import struct
-# import pandas as pd
 from scapy.all import sendp, send, hexdump, get_if_list, get_if_hwaddr, bind_layers
 from scapy.all import Packet, IPOption
 from scapy.all import Ether, IP, UDP
@@ -29,17 +28,25 @@ def get_if():
 
 class Agri(Packet):
     fields_desc = [ IntField("id", 0),
-                  LongField("pH", 0),
-                  LongField("temp", 0)]
+                  IntField("pH", 0),
+                  IntField("temp", 0)]
 
 bind_layers(Ether, IP)
 bind_layers(IP, Agri)
 
+# Usage ./send.py DEST_ADDR
 def main():
     addr = socket.gethostbyname(sys.argv[1])
+    ph = raw_input('Enter pH Value : ')
+    ph = float(ph)
+    ph = int('0x' + (struct.pack('!f', ph).encode('hex')), 16)
+
+    temp = raw_input('Enter temperature (degree Celcius) : ')
+    temp = float(temp)
+    temp = int('0x' + (struct.pack('!f', temp).encode('hex')), 16)
     iface = get_if()
 
-    pkt = Ether(dst='08:00:00:00:01:22',type=0x800) / IP(dst=addr, proto=143) /  Agri(id=0x1234, pH=0x3f8, temp=0x3f8)
+    pkt = Ether(dst='08:00:00:00:01:22',type=0x800) / IP(dst=addr, proto=143) /  Agri(id=0x1234, pH=ph, temp=temp)
     pkt.show2()
     sendp(pkt, iface=iface, verbose=False)
 

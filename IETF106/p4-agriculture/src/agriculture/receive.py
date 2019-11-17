@@ -18,7 +18,7 @@ def get_if():
     for i in get_if_list():
         if "eth0" in i:
             iface=i
-            break;
+            break
     if not iface:
         print "Cannot find eth0 interface"
         exit(1)
@@ -27,8 +27,8 @@ def get_if():
 
 class Agri(Packet):
     fields_desc = [ IntField("id", 0),
-                  LongField("pH", 0),
-                  LongField("temp", 0)]
+                  IntField("pH", 0),
+                  IntField("temp", 0)]
 
 def handle_pkt(pkt):
     print "got a packet"
@@ -42,7 +42,7 @@ def main():
     iface = 'eth0'
     print "sniffing on %s" % iface
     sys.stdout.flush()
-    sniff(flter="ip", iface = iface,
+    sniff(filter="ip", iface = iface,
           prn = lambda x: handle_pkt(x))
 
 if __name__ == '__main__':

@@ -42,8 +42,8 @@ header udp_t {
 
 header agri_t {
     bit<32>   id;
-    bit<64>   pH;
-    bit<64>   temp;
+    bit<32>   pH;
+    bit<32>   temp;
 }
 
 struct metadata {
@@ -121,8 +121,8 @@ control MyIngress(inout headers hdr,
     }
 
     action do_copy(){
-        // clone type, mirror id
-        // add port to mirror id
+        // Define Clone Type, Mirror Session ID
+        // Have to manually add port 3 into mirror session 0
         clone(CloneType.I2E, (bit<32>) 32w0);
     }
 
@@ -150,9 +150,12 @@ control MyIngress(inout headers hdr,
             do_copy;
         }
         const entries = {
-            // IEEE 754
-            // how to encode floating point numbers
-            (64w0x3f8 .. 64w0x999 , 64w0x3f8 .. 64w0x999) : do_copy();
+            // IEEE 754 - Floating point single precision
+            // Max normal value, reference: https://docs.oracle.com/cd/E19957-01/806-3568/ncg_math.html
+            // Example of abnormal conditions: 
+            // 1 <= pH <= 6 OR temp >= 25.0 degree Celcius
+            (_ , 32w0x41c80000 .. 32w0x7f7fffff) : do_copy();
+            (32w0x3f800000 .. 32w0x40c00000 , _) : do_copy();
         }
     }
 
